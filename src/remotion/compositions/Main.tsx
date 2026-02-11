@@ -21,7 +21,7 @@ import {
   BlurReveal,
 } from "../library/components/text/TextAnimation";
 import { Counter } from "../library/components/text/Counter";
-import { Camera, Zoom } from "../library/components/layout/Camera";
+import { Zoom } from "../library/components/layout/Camera";
 import { BrowserMockup } from "../library/components/mockups/BrowserMockup";
 import { Cursor } from "../library/components/ui/Cursor";
 import { Particles } from "../library/components/effects/Particles";
@@ -182,7 +182,6 @@ const GridBackground: React.FC = () => {
 // ============================================
 const OpeningHook: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   // Staggered reveals
   const logoOpacity = interpolate(frame, [10, 30], [0, 1], {
@@ -314,6 +313,9 @@ const StatItem: React.FC<{
 
   if (frame < startFrame) return null;
 
+  // Use fps for counter delay calculation
+  const counterDelay = (startFrame - 80) / fps;
+
   return (
     <div
       style={{
@@ -337,7 +339,7 @@ const StatItem: React.FC<{
           from={0}
           to={value}
           duration={1.2}
-          delay={(startFrame - 80) / fps}
+          delay={counterDelay}
           abbreviate={value > 1000}
         />
         <span style={{ fontSize: 32, marginLeft: 4 }}>{suffix}</span>
@@ -1230,7 +1232,7 @@ const ClosingCTA: React.FC = () => {
 // Main Composition
 // ============================================
 export const Main: React.FC = () => {
-  const { fontFamily: headingFont } = loadSpaceGrotesk();
+  loadSpaceGrotesk(); // Load heading font
   const { fontFamily: bodyFont } = loadInter();
   const frame = useCurrentFrame();
 
